@@ -1,50 +1,59 @@
-import React from "react";
-import { StyleSheet } from "react-native";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 /**
  * Import Routes
  */
-import { routes, RouteProperties } from "./src/routes";
-
+import { routes } from "./src/routes";
+import SignInScreen from "./src/screens/signIn";
 /**
  * Import Components
  */
 import BottomNavbar from "./src/common/bottomNavBar";
 import { colors } from "./src/common/styles";
-const Tab = createBottomTabNavigator();
+import { createStackNavigator } from "@react-navigation/stack";
+
+/**
+ * Navigators
+ */
+const AuthNavigator = createStackNavigator();
+const BottomTabNavigator = createBottomTabNavigator();
 
 export default function App() {
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{
-          headerTitle: "",
-          headerStyle: {
-            backgroundColor: colors.primary,
-            height: 60,
-          },
-        }}
-        tabBar={BottomNavbar}
-      >
-        {routes.map((route) => (
-          <Tab.Screen
-            name={route.name}
-            key={route.id}
-            component={route.component}
-          />
-        ))}
-      </Tab.Navigator>
+      <AuthNavigator.Navigator screenOptions={{ headerShown: false }}>
+        <AuthNavigator.Screen name="sign-up" component={SignInScreen} />
+        <AuthNavigator.Screen name="app" component={MainApp} />
+      </AuthNavigator.Navigator>
     </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+function MainApp() {
+  return (
+    <BottomTabNavigator.Navigator
+      // Specify initial route
+      initialRouteName={routes[0].name}
+      screenOptions={{
+        headerTitle: "",
+        headerStyle: {
+          backgroundColor: colors.primary,
+          height: 60,
+        },
+      }}
+      tabBar={BottomNavbar}
+    >
+      {routes.map((route) => (
+        <BottomTabNavigator.Screen
+          name={route.name}
+          key={route.id}
+          component={route.component}
+        />
+      ))}
+    </BottomTabNavigator.Navigator>
+  );
+}

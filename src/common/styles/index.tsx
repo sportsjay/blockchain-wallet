@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 /**
  * Color Pallete https://colorhunt.co/palette/494ca28186d5c6cbefe3e7f1
@@ -17,7 +17,7 @@ export const colors = {
   secondary: "#8186D5",
   gray: "#C6CBEF",
   gray2: "#E3E7F1",
-  whilte: "#FFFFFF",
+  white: "#FFFFFF",
   black: "#000000",
   black2: "#181933",
 };
@@ -26,3 +26,11 @@ export const sizes = {
   width: Dimensions.get("window").width,
   height: Dimensions.get("window").height,
 };
+
+export const commonStyles = StyleSheet.create({
+  center: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

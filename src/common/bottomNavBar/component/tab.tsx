@@ -1,33 +1,49 @@
-import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import React from "react";
 import {
-  TouchableWithoutFeedback,
   View,
   Text,
   StyleSheet,
-  TouchableWithoutFeedbackProps,
+  TouchableOpacity,
+  TouchableOpacityProps,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { colors } from "../../styles";
 
-interface TabProperties extends TouchableWithoutFeedbackProps {
+interface TabProperties extends TouchableOpacityProps {
+  isActive: boolean;
   iconName: string;
   title: string;
 }
 
 export default function Tab(props: TabProperties) {
   return (
-    <TouchableWithoutFeedback {...props} style={styles.root}>
+    <TouchableOpacity {...props} style={styles.root}>
       <View style={styles.root}>
         <Icon
           name={props.iconName ?? "home"}
           type="material"
           tvParallaxProperties={undefined}
+          color={props.isActive ? colors.primary : colors.gray}
           size={32}
         />
-        <Text style={styles.title}>{props.title ?? "unknown"}</Text>
+        <Text
+          style={[
+            styles.title,
+            { color: props.isActive ? colors.primary : colors.gray },
+          ]}
+        >
+          {props.title ?? "unknown"}
+        </Text>
+        <View
+          style={[
+            styles.active,
+            {
+              backgroundColor: props.isActive ? colors.primary : "transparent",
+            },
+          ]}
+        />
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 }
 
@@ -42,9 +58,18 @@ const styles = StyleSheet.create({
     width: 60,
     height: "80%",
     backgroundColor: colors.secondary,
+    borderRadius: 10,
+  },
+  active: {
+    height: 6,
+    width: 6,
+    borderRadius: 3,
   },
   title: {
     color: colors.black2,
     textAlign: "center",
+    fontWeight: "700",
+    marginBottom: 4,
+    fontSize: 10, // TODO: unify font size
   },
 });
