@@ -1,3 +1,4 @@
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import React, { useState } from "react";
 import {
   View,
@@ -8,21 +9,43 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { signIn } from "../../actions/user";
+
+// Import Styles
 import { colors, commonStyles } from "../../common/styles";
 
-/**
- * Import Component
- */
+// Import Component
 import TextInputPrimary from "../../common/textInput";
+import { MainAppDispatch } from "../../reducers/store";
 
-export default function SignInScreen() {
+export default function SignInScreen(props: StackScreenProps<any>) {
   // States
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   // Functions
-  function onSubmit() {}
+  const dispatch = useDispatch<MainAppDispatch>();
 
+  /**
+   * Submits the login query by communicating with Web3
+   */
+  function onSubmit() {
+    // TODO: login logic
+    if (username) {
+      dispatch(
+        signIn({
+          isSigned: true,
+          privateKey: "",
+          publicKey: "",
+        })
+      );
+      // TODO: enumerate navigations
+      props.navigation.navigate("main");
+    }
+  }
+
+  // TODO: change password logic
   function onPressForgotPassword() {}
 
   return (

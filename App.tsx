@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+import { Provider } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { MainAppDispatch, MainAppState } from "./src/reducers/store";
+import { store } from "./src/reducers/store";
 
 /**
  * Import Routes
@@ -12,7 +18,6 @@ import SignInScreen from "./src/screens/signIn";
  */
 import BottomNavbar from "./src/common/bottomNavBar";
 import { colors } from "./src/common/styles";
-import { createStackNavigator } from "@react-navigation/stack";
 
 /**
  * Navigators
@@ -21,19 +26,30 @@ const AuthNavigator = createStackNavigator();
 const BottomTabNavigator = createBottomTabNavigator();
 
 export default function App() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
-
   return (
-    <NavigationContainer>
-      <AuthNavigator.Navigator screenOptions={{ headerShown: false }}>
-        <AuthNavigator.Screen name="sign-up" component={SignInScreen} />
-        <AuthNavigator.Screen name="app" component={MainApp} />
-      </AuthNavigator.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <AuthNavigator.Navigator screenOptions={{ headerShown: false }}>
+          <AuthNavigator.Screen name="sign-in" component={SignInScreen} />
+          <AuthNavigator.Screen name="main" component={MainApp} />
+        </AuthNavigator.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
-function MainApp() {
+function MainApp(props: any) {
+  // States
+  const isSigned = useSelector<MainAppState>((state) => state.user.isSigned);
+
+  // Functions
+  useEffect(() => {
+    console.log(props);
+    if (!isSigned) {
+    }
+    return () => {};
+  }, [isSigned]);
+
   return (
     <BottomTabNavigator.Navigator
       // Specify initial route
