@@ -4,28 +4,34 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Provider } from "react-redux";
-import { useDispatch, useSelector } from "react-redux";
-import { MainAppDispatch, MainAppState } from "./src/reducers/store";
+import { useSelector } from "react-redux";
+import { MainAppState } from "./src/reducers/store";
 import { store } from "./src/reducers/store";
 
-/**
- * Import Routes
- */
+// Import web3
+import web3 from "web3";
+import "./global";
+
+//Import Routes
 import { routes } from "./src/routes";
 import SignInScreen from "./src/screens/signIn";
-/**
- * Import Components
- */
+
+//Import Components
 import BottomNavbar from "./src/common/bottomNavBar";
 import { colors } from "./src/common/styles";
 
-/**
- * Navigators
- */
+//Navigators
 const AuthNavigator = createStackNavigator();
 const BottomTabNavigator = createBottomTabNavigator();
 
 export default function App() {
+  useEffect(() => {
+    const web3js = new web3(
+      new web3.providers.WebsocketProvider("ws://localhost:8545")
+    );
+    return () => {};
+  }, []);
+
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -45,6 +51,7 @@ function MainApp(props: any) {
   // Functions
   useEffect(() => {
     console.log(props);
+    console.log(`sign in status: ${isSigned}`);
     if (!isSigned) {
     }
     return () => {};

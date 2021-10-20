@@ -93,7 +93,15 @@ export default function SignInScreen(props: StackScreenProps<any>) {
           <Button title="Forgot Password" onPress={onPressForgotPassword} />
         </View>
         <View style={[styles.formFooter]}>
-          <Text>Footer...</Text>
+          <Text
+            style={[
+              styles.formDescription,
+              { textAlign: "center", fontWeight: "700" },
+            ]}
+          >
+            <Text style={{ color: colors.primary }}>All Rights Reserved</Text>{" "}
+            J-FYP
+          </Text>
         </View>
       </View>
     </KeyboardAvoidingView>
