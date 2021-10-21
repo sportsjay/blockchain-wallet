@@ -23,13 +23,13 @@ export default function Tab(props: TabProperties) {
           name={props.iconName ?? "home"}
           type="material"
           tvParallaxProperties={undefined}
-          color={props.isActive ? colors.primary : colors.gray}
-          size={32}
+          color={props.isActive ? colors.secondary : colors.gray}
+          size={24}
         />
         <Text
           style={[
             styles.title,
-            { color: props.isActive ? colors.primary : colors.gray },
+            { color: props.isActive ? colors.secondary : colors.gray },
           ]}
         >
           {props.title ?? "unknown"}
@@ -38,7 +38,9 @@ export default function Tab(props: TabProperties) {
           style={[
             styles.active,
             {
-              backgroundColor: props.isActive ? colors.primary : "transparent",
+              backgroundColor: props.isActive
+                ? colors.secondary
+                : "transparent",
             },
           ]}
         />
@@ -57,8 +59,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 60,
     height: "80%",
-    backgroundColor: colors.secondary,
-    borderRadius: 10,
+    // backgroundColor: colors,
+    borderRadius: 4,
   },
   active: {
     height: 6,
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
     color: colors.black2,
     textAlign: "center",
     fontWeight: "700",
-    marginBottom: 4,
+    marginBottom: 2,
     fontSize: 10, // TODO: unify font size
   },
 });

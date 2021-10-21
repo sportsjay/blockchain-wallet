@@ -8,10 +8,6 @@ import { useSelector } from "react-redux";
 import { MainAppState } from "./src/reducers/store";
 import { store } from "./src/reducers/store";
 
-// Import web3
-import web3 from "web3";
-import "./global";
-
 //Import Routes
 import { routes } from "./src/routes";
 import SignInScreen from "./src/screens/signIn";
@@ -24,23 +20,34 @@ import { colors } from "./src/common/styles";
 const AuthNavigator = createStackNavigator();
 const BottomTabNavigator = createBottomTabNavigator();
 
-export default function App() {
-  useEffect(() => {
-    const web3js = new web3(
-      new web3.providers.WebsocketProvider("ws://localhost:8545")
-    );
-    return () => {};
-  }, []);
-
+export default function Index() {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <AuthNavigator.Navigator screenOptions={{ headerShown: false }}>
-          <AuthNavigator.Screen name="sign-in" component={SignInScreen} />
-          <AuthNavigator.Screen name="main" component={MainApp} />
-        </AuthNavigator.Navigator>
-      </NavigationContainer>
+      <App />
     </Provider>
+  );
+}
+
+function App() {
+  const isSigned = useSelector<MainAppState, boolean>(
+    (state) => state.user.isSigned
+  );
+
+  useEffect(() => {
+    return () => {};
+  }, [isSigned]);
+
+  return (
+    <NavigationContainer>
+      <AuthNavigator.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <AuthNavigator.Screen name="sign-in" component={SignInScreen} />
+        <AuthNavigator.Screen name="main" component={MainApp} />
+      </AuthNavigator.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -51,7 +58,6 @@ function MainApp(props: any) {
   // Functions
   useEffect(() => {
     console.log(props);
-    console.log(`sign in status: ${isSigned}`);
     if (!isSigned) {
     }
     return () => {};
@@ -66,6 +72,9 @@ function MainApp(props: any) {
         headerStyle: {
           backgroundColor: colors.primary,
           height: 60,
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 0,
         },
       }}
       tabBar={BottomNavbar}

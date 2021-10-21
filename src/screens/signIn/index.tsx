@@ -30,14 +30,31 @@ export default function SignInScreen(props: StackScreenProps<any>) {
   /**
    * Submits the login query by communicating with Web3
    */
-  function onSubmit() {
+  async function onSubmit() {
     // TODO: login logic
-    if (username) {
+    // Temporary
+    const temporary = "0x8631015e55B8D25c074DeA1edBE7fEe3E707c56F";
+    const body = {
+      publicKey: username === "Jason" ? temporary : username,
+    };
+    const loginResponse = await fetch(`http://192.168.0.104:3000/validate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const loginResponseBody = await loginResponse.json();
+    console.log(loginResponseBody);
+    // if (loginResponseBody) {
+    // }
+    // ========================================== //
+    if (loginResponseBody.isSigned) {
       dispatch(
         signIn({
-          isSigned: true,
+          isSigned: loginResponseBody.isSigned,
           privateKey: "",
-          publicKey: "",
+          publicKey: loginResponseBody.publicKey,
         })
       );
       // TODO: enumerate navigations

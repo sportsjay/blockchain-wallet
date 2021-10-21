@@ -15,7 +15,6 @@ export default function BottomNavbar(props: BottomTabBarProps) {
       <View style={styles.navigation}>
         {props.state.routes.map((route, idx) => {
           const isActive = props.state.index === idx;
-
           function onPress() {
             const event = props.navigation.emit({
               type: "tabPress",
@@ -56,8 +55,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 20,
     width: "90%",
-    height: 82,
-    borderRadius: 8,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: colors.primary,
     display: "flex",
     flexDirection: "row",

@@ -20,6 +20,8 @@ export const colors = {
   white: "#FFFFFF",
   black: "#000000",
   black2: "#181933",
+  red: "#DC143C",
+  green: "#3CB371",
 };
 
 export const sizes = {

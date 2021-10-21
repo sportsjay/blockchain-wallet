@@ -7,14 +7,14 @@ import HomeScreen from "../screens/home";
 import ProfileScreen from "../screens/profile";
 import TransactionHistoryScreen from "../screens/transactionHistory";
 
-export interface RouteProperties {
+export interface RouteProperties<T> {
   id: number;
   name: string;
   iconName: string;
-  component: ComponentType;
+  component: ComponentType<T>;
 }
 
-export const routes: RouteProperties[] = [
+export const routes: RouteProperties<any>[] = [
   {
     id: 0,
     name: "home",
