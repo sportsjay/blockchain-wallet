@@ -1,12 +1,13 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { Icon } from "react-native-elements";
 import { useSelector } from "react-redux";
 import { colors, commonStyles } from "../../common/styles";
 import { userState } from "../../constants/user";
+import { EVM_NETWORK } from "../../networkConfig";
 import { MainAppState } from "../../reducers/store";
 import ActionIcon from "./components/actionIcons";
+import { Item, Transaction } from "./components/transaction";
 
 export default function HomeScreen(props: StackScreenProps<any>) {
   // States
@@ -25,7 +26,7 @@ export default function HomeScreen(props: StackScreenProps<any>) {
   async function getRecentTransactions() {
     if (user.publicKey) {
       const response = await fetch(
-        `http://192.168.0.104:3000/transactions/${user.publicKey}`
+        `${EVM_NETWORK}/transactions/${user.publicKey}`
       );
       const parsedBody = await response.json();
       if (parsedBody.data.length > 0)
@@ -42,8 +43,7 @@ export default function HomeScreen(props: StackScreenProps<any>) {
           style={{
             flex: 17,
             width: "90%",
-            // backgroundColor: colors.white,
-            padding: 10,
+            paddingVertical: 10,
             justifyContent: "flex-end",
           }}
         >
@@ -58,7 +58,7 @@ export default function HomeScreen(props: StackScreenProps<any>) {
           </Text>
           <Text
             style={{
-              marginBottom: 60,
+              marginBottom: 32,
               color: colors.gray2,
               fontSize: 18,
               fontWeight: "300",
@@ -72,44 +72,44 @@ export default function HomeScreen(props: StackScreenProps<any>) {
             Welcome Back
           </Text>
           <Text
-            style={{ fontWeight: "800", color: colors.gray, maxWidth: "60%" }}
+            style={{
+              fontSize: 16,
+              fontWeight: "800",
+              color: colors.gray,
+              maxWidth: "60%",
+            }}
           >
             {user.publicKey}
           </Text>
         </View>
         <View style={{ flex: 1 }} />
-        <View
-          style={[
-            commonStyles.center,
-            {
-              flex: 4,
-              width: "90%",
-              borderRadius: 20,
-              backgroundColor: colors.gray,
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            },
-          ]}
-        >
-          <ActionIcon onPress={() => {}} iconName="payment" />
-          <ActionIcon onPress={() => {}} iconName="payment" />
-          <ActionIcon onPress={() => {}} iconName="payment" />
-          <ActionIcon onPress={() => {}} iconName="payment" />
+        <View style={[commonStyles.center, styles.actions]}>
+          <ActionIcon onPress={() => {}} iconName="payment" title="Transfer" />
+          <ActionIcon
+            onPress={() => {}}
+            iconName="arrow-circle-up"
+            title="Top Up"
+          />
+          <ActionIcon onPress={() => {}} iconName="toll" title="Services" />
+          <ActionIcon onPress={() => {}} iconName="settings" title="Settings" />
         </View>
       </View>
       <View style={[commonStyles.center, { flex: 2, width: "100%" }]}>
-        <View style={styles.contentHeader}>
-          <Text
-            style={{ color: colors.primary, fontSize: 20, fontWeight: "700" }}
-          >
-            Recent Transactions
-          </Text>
-        </View>
         <FlatList
           data={[...transactionList, ...transactionList, ...transactionList]}
           keyExtractor={(item, idx) => item.toString() + idx.toString()}
           ListFooterComponent={() => <View style={{ height: 100 }} />}
           renderItem={(props) => <Item transaction={props.item} user={user} />}
+          ListHeaderComponent={() => (
+            <Text
+              style={[
+                styles.contentHeader,
+                { color: colors.primary, fontSize: 20, fontWeight: "700" },
+              ]}
+            >
+              Recent Transactions
+            </Text>
+          )}
           contentContainerStyle={{
             width: "100%",
           }}
@@ -122,94 +122,13 @@ export default function HomeScreen(props: StackScreenProps<any>) {
             />
           )}
           style={{
-            width: "90%",
+            width: "100%",
           }}
         />
       </View>
     </View>
   );
 }
-
-interface ItemProperties {
-  transaction: Transaction;
-  user: userState;
-}
-interface Transaction {
-  returnValues: {
-    _from: string;
-    _to: string;
-    _value: string;
-  };
-  event: string;
-  transferAmount: string;
-}
-
-function Item(props: ItemProperties) {
-  const { _from, _to } = props.transaction.returnValues;
-  const me = props.user;
-
-  return (
-    <View style={itemStyles.root}>
-      <View style={[commonStyles.center, itemStyles.iconWrapper]}>
-        <Icon
-          size={32}
-          name="payment"
-          type="material"
-          tvParallaxProperties={false}
-          color={colors.primary}
-        />
-      </View>
-      <View>
-        <View style={itemStyles.header}>
-          <Text
-            style={{ fontSize: 14, fontWeight: "800", color: colors.primary }}
-          >
-            {props.transaction.event}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: "800",
-              color: me.publicKey === _from ? colors.red : colors.green,
-            }}
-          >
-            {props.transaction.transferAmount}MC
-          </Text>
-        </View>
-        <Text
-          style={{ fontSize: 10, fontWeight: "800", color: colors.secondary }}
-        >
-          {_to === me.publicKey ? `Received\n${_from}` : `To\n${_to}`}
-        </Text>
-      </View>
-    </View>
-  );
-}
-
-const itemStyles = StyleSheet.create({
-  root: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.gray,
-    paddingHorizontal: 12,
-    paddingVertical: 16,
-    borderRadius: 10,
-  },
-  iconWrapper: {
-    height: 40,
-    width: 40,
-    marginRight: 10,
-    borderRadius: 5,
-    backgroundColor: colors.secondary,
-  },
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-});
 
 const styles = StyleSheet.create({
   root: {
@@ -225,5 +144,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     paddingVertical: 10,
   },
-  contentHeader: { width: "90%", marginVertical: 10 },
+  contentHeader: { width: "90%", marginVertical: 10, alignSelf: "center" },
+  actions: {
+    flex: 4,
+    width: "90%",
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: colors.gray,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    borderStyle: "solid",
+    borderWidth: 6,
+    borderColor: colors.primary,
+  },
 });

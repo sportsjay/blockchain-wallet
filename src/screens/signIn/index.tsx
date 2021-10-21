@@ -17,6 +17,7 @@ import { colors, commonStyles } from "../../common/styles";
 
 // Import Component
 import TextInputPrimary from "../../common/textInput";
+import { EVM_NETWORK } from "../../networkConfig";
 import { MainAppDispatch } from "../../reducers/store";
 
 export default function SignInScreen(props: StackScreenProps<any>) {
@@ -33,11 +34,10 @@ export default function SignInScreen(props: StackScreenProps<any>) {
   async function onSubmit() {
     // TODO: login logic
     // Temporary
-    const temporary = "0x8631015e55B8D25c074DeA1edBE7fEe3E707c56F";
     const body = {
-      publicKey: username === "Jason" ? temporary : username,
+      publicKey: username,
     };
-    const loginResponse = await fetch(`http://192.168.0.104:3000/validate`, {
+    const loginResponse = await fetch(`${EVM_NETWORK}/validate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,9 +45,6 @@ export default function SignInScreen(props: StackScreenProps<any>) {
       body: JSON.stringify(body),
     });
     const loginResponseBody = await loginResponse.json();
-    console.log(loginResponseBody);
-    // if (loginResponseBody) {
-    // }
     // ========================================== //
     if (loginResponseBody.isSigned) {
       dispatch(

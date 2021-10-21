@@ -14,6 +14,7 @@ import SignInScreen from "./src/screens/signIn";
 
 //Import Components
 import BottomNavbar from "./src/common/bottomNavBar";
+import TopBar from "./src/common/topBar";
 import { colors } from "./src/common/styles";
 
 //Navigators
@@ -68,14 +69,7 @@ function MainApp(props: any) {
       // Specify initial route
       initialRouteName={routes[0].name}
       screenOptions={{
-        headerTitle: "",
-        headerStyle: {
-          backgroundColor: colors.primary,
-          height: 60,
-          elevation: 0,
-          shadowOpacity: 0,
-          borderBottomWidth: 0,
-        },
+        header: TopBar,
       }}
       tabBar={BottomNavbar}
     >
