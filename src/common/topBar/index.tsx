@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import { colors, commonStyles } from "../styles";
 
@@ -19,7 +19,8 @@ export default function TopBar() {
 const styles = StyleSheet.create({
   root: {
     backgroundColor: colors.secondary,
-    height: 80,
+    height: 100,
+    paddingBottom: 10,
     elevation: 0,
     paddingHorizontal: "5%",
     borderBottomWidth: 0,

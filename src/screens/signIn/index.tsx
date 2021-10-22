@@ -34,8 +34,12 @@ export default function SignInScreen(props: StackScreenProps<any>) {
   async function onSubmit() {
     // TODO: login logic
     // Temporary
+    console.log(username === "Jason");
     const body = {
-      publicKey: username,
+      publicKey:
+        username === "Jason"
+          ? "0x8631015e55B8D25c074DeA1edBE7fEe3E707c56F"
+          : "null",
     };
     const loginResponse = await fetch(`${EVM_NETWORK}/validate`, {
       method: "POST",

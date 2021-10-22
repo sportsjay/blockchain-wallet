@@ -7,18 +7,18 @@ import Tab from "./component/tab";
 /**
  * routes
  */
-import { routes } from "../../routes";
+import { tabRoutes } from "../../routes";
 
 export default function BottomNavbar(props: BottomTabBarProps) {
   return (
     <View style={styles.root}>
       <View style={styles.navigation}>
-        {props.state.routes.map((route, idx) => {
+        {tabRoutes.map((route, idx) => {
           const isActive = props.state.index === idx;
           function onPress() {
             const event = props.navigation.emit({
               type: "tabPress",
-              target: route.key,
+              target: props.state.routes[idx].key,
               canPreventDefault: true,
             });
 
@@ -30,8 +30,8 @@ export default function BottomNavbar(props: BottomTabBarProps) {
           return (
             <Tab
               onPress={onPress}
-              key={route.key}
-              iconName={routes[idx].iconName}
+              key={props.state.routes[idx].key}
+              iconName={tabRoutes[idx].iconName!}
               title={route.name}
               isActive={isActive}
             />

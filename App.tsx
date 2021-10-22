@@ -9,7 +9,7 @@ import { MainAppState } from "./src/reducers/store";
 import { store } from "./src/reducers/store";
 
 //Import Routes
-import { routes } from "./src/routes";
+import { tabRoutes } from "./src/routes";
 import SignInScreen from "./src/screens/signIn";
 
 //Import Components
@@ -67,13 +67,13 @@ function MainApp(props: any) {
   return (
     <BottomTabNavigator.Navigator
       // Specify initial route
-      initialRouteName={routes[0].name}
+      initialRouteName={tabRoutes[0].name}
       screenOptions={{
         header: TopBar,
       }}
       tabBar={BottomNavbar}
     >
-      {routes.map((route) => (
+      {tabRoutes.map((route) => (
         <BottomTabNavigator.Screen
           name={route.name}
           key={route.id}

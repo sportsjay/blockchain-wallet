@@ -16,7 +16,7 @@ interface ActionIconProperties extends TouchableOpacityProps {
 
 export default function ActionIcon(props: ActionIconProperties) {
   return (
-    <TouchableOpacity style={styles.root}>
+    <TouchableOpacity {...props} style={styles.root}>
       <View>
         <Icon
           size={28}
