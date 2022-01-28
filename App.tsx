@@ -58,7 +58,6 @@ function MainApp(props: any) {
 
   // Functions
   useEffect(() => {
-    console.log(props);
     if (!isSigned) {
     }
     return () => {};

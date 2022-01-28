@@ -7,6 +7,7 @@ const initialUserState: userState = {
   publicKey: null,
   privateKey: null,
   isSigned: false,
+  balance: "0",
 };
 
 /**

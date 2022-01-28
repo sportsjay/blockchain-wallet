@@ -8,9 +8,11 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Button,
+  Alert,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { signIn } from "../../actions/user";
+import ServiceAPI from "../../api";
 
 // Import Styles
 import { colors, commonStyles } from "../../common/styles";
@@ -20,7 +22,23 @@ import TextInputPrimary from "../../common/textInput";
 import { EVM_NETWORK } from "../../networkConfig";
 import { MainAppDispatch } from "../../reducers/store";
 
+// Temporary
+function getUser(username: string) {
+  switch (username) {
+    case "Jason":
+      return "0x8631015e55B8D25c074DeA1edBE7fEe3E707c56F";
+    case "Chris":
+      return "0x1918fB723b298856CF62BBC930212E6d5C399d0D";
+    case "John":
+      return "0x6313e852Aa713c0d26758A77c304EdA61d2B48bF";
+    default:
+      return "null";
+  }
+}
+
 export default function SignInScreen(props: StackScreenProps<any>) {
+  const api = new ServiceAPI();
+
   // States
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,38 +46,21 @@ export default function SignInScreen(props: StackScreenProps<any>) {
   // Functions
   const dispatch = useDispatch<MainAppDispatch>();
 
-  /**
-   * Submits the login query by communicating with Web3
-   */
   async function onSubmit() {
-    // TODO: login logic
-    // Temporary
-    console.log(username === "Jason");
-    const body = {
-      publicKey:
-        username === "Jason"
-          ? "0x8631015e55B8D25c074DeA1edBE7fEe3E707c56F"
-          : "null",
-    };
-    const loginResponse = await fetch(`${EVM_NETWORK}/validate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    const loginResponseBody = await loginResponse.json();
-    // ========================================== //
-    if (loginResponseBody.isSigned) {
+    const loginResponseBody = await api.login(getUser(username));
+    if (loginResponseBody.data.isSigned) {
       dispatch(
         signIn({
-          isSigned: loginResponseBody.isSigned,
+          isSigned: loginResponseBody.data.isSigned,
           privateKey: "",
-          publicKey: loginResponseBody.publicKey,
+          publicKey: loginResponseBody.data.publicKey,
+          balance: loginResponseBody.data.balance,
         })
       );
       // TODO: enumerate navigations
       props.navigation.navigate("main");
+    } else {
+      Alert.alert("Failed to login!");
     }
   }
 

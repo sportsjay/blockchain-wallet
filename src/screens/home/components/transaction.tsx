@@ -22,6 +22,20 @@ export interface Transaction {
   transferAmount: string;
 }
 
+// Temporary
+function getUser(username: string) {
+  switch (username) {
+    case "0x8631015e55B8D25c074DeA1edBE7fEe3E707c56F":
+      return "Jason";
+    case "0x1918fB723b298856CF62BBC930212E6d5C399d0D":
+      return "Chris";
+    case "0x6313e852Aa713c0d26758A77c304EdA61d2B48bF":
+      return "John";
+    default:
+      return "null";
+  }
+}
+
 export function Item(props: ItemProperties) {
   const { _from, _to } = props.transaction.returnValues;
   const me = props.user;
@@ -37,7 +51,7 @@ export function Item(props: ItemProperties) {
           color={colors.primary}
         />
       </View>
-      <View>
+      <View style={{ flex: 1 }}>
         <View style={itemStyles.header}>
           <Text
             style={{ fontSize: 14, fontWeight: "800", color: colors.primary }}
@@ -57,7 +71,9 @@ export function Item(props: ItemProperties) {
         <Text
           style={{ fontSize: 10, fontWeight: "800", color: colors.secondary }}
         >
-          {_to === me.publicKey ? `Received\n${_from}` : `To\n${_to}`}
+          {_to === me.publicKey
+            ? `Received\n${getUser(_from)}`
+            : `To\n${getUser(_to)}`}
         </Text>
       </View>
     </View>

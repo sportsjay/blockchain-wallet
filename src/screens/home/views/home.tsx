@@ -3,19 +3,35 @@ import { useSelector } from "react-redux";
 import { StackScreenProps } from "@react-navigation/stack";
 import { colors, commonStyles } from "../../../common/styles";
 import { userState } from "../../../constants/user";
-import { EVM_NETWORK } from "../../../networkConfig";
 import { MainAppState } from "../../../reducers/store";
 import ActionIcon from "../components/actionIcons";
 import { Item, Transaction } from "../components/transaction";
 import React, { useEffect, useState } from "react";
 import { HomeStackParams } from "..";
+import ServiceAPI from "../../../api";
 
 export type HomeScreenProperties = StackScreenProps<
   HomeStackParams,
   "home-index"
 >;
 
+// Temporary
+function getUser(username: string | null) {
+  switch (username) {
+    case "0x8631015e55B8D25c074DeA1edBE7fEe3E707c56F":
+      return "Jason";
+    case "0x1918fB723b298856CF62BBC930212E6d5C399d0D":
+      return "Chris";
+    case "0x6313e852Aa713c0d26758A77c304EdA61d2B48bF":
+      return "John";
+    default:
+      return "null";
+  }
+}
+
 export default function HomeScreen(props: HomeScreenProperties) {
+  const api = new ServiceAPI();
+
   // States
   const user = useSelector<MainAppState, userState>((state) => state.user);
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
@@ -24,21 +40,16 @@ export default function HomeScreen(props: HomeScreenProperties) {
   // Functions
   useEffect(() => {
     // TODO: Fetch recent transactions from blockchain
-    getRecentTransactions();
+    initializeData();
     return () => {};
   }, [user.isSigned]);
 
   // Temporary
-  async function getRecentTransactions() {
+  async function initializeData() {
     if (user.publicKey) {
-      const response = await fetch(
-        `${EVM_NETWORK}/transactions/${user.publicKey}`
-      );
-      const parsedBody = await response.json();
-      if (parsedBody.data.length > 0)
-        setTransactionList(parsedBody.data.map((_data: Transaction) => _data));
-
-      setBalance(parsedBody.balance);
+      const txResponse = await api.getRecentTransactions(user.publicKey);
+      if (txResponse.data.length > 0) setTransactionList([...txResponse.data]);
+      setBalance(txResponse.balance);
     }
   }
 
@@ -85,7 +96,7 @@ export default function HomeScreen(props: HomeScreenProperties) {
               maxWidth: "60%",
             }}
           >
-            {user.publicKey}
+            {getUser(user.publicKey)}
           </Text>
         </View>
         <View style={{ flex: 1 }} />
@@ -122,7 +133,7 @@ export default function HomeScreen(props: HomeScreenProperties) {
       </View>
       <View style={[commonStyles.center, { flex: 2, width: "100%" }]}>
         <FlatList
-          data={[...transactionList, ...transactionList, ...transactionList]}
+          data={[...transactionList]}
           keyExtractor={(item, idx) => item.toString() + idx.toString()}
           ListFooterComponent={() => <View style={{ height: 100 }} />}
           renderItem={(props) => <Item transaction={props.item} user={user} />}
